@@ -3,6 +3,8 @@
 
   vars:
     sd_access_user: 'travis'
+    sd_access_authorized_keys:
+      - toby.pub
 
   pre_tasks:
     - name: Update apt cache.
