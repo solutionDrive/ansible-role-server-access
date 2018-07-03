@@ -1,0 +1,24 @@
+galaxy_info:
+  author: solutionDrive GmbH
+  description: This role manages authorized keys for a specified user on the specified hosts
+  company: solutionDrive GmbH
+
+  license: MIT
+
+  min_ansible_version: 2.0
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+        - trusty
+    - name: Debian
+      versions:
+        - stretch
+        - jessie
+
+  galaxy_tags:
+    - server
+
+dependencies: []

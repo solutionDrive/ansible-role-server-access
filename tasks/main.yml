@@ -1,0 +1,62 @@
+---
+  - fail:
+      msg: "sd_access_user needs to be defined"
+    when: "sd_access_user is not defined or sd_access_user == ''"
+    tags: server-access
+
+  - fail:
+      msg: "sd_access_authorized_keys can not be empty"
+    when: sd_access_authorized_keys|length == 0
+    tags: server-access
+
+  - name: assign temporary storage variable
+    local_action: "shell echo {{ 9999999999999999999999 | random | to_uuid }}"
+    register: uuid
+    changed_when: false
+    become: false
+    tags: server-access
+
+  - name: create temporary keys file
+    local_action: "shell > /tmp/{{uuid.stdout}}"
+    changed_when: false
+    become: false
+    tags: server-access
+
+  - name: concatenate user keys for pre-defined users
+    local_action: "shell echo {{ lookup('file', item) }} >> /tmp/{{uuid.stdout}}"
+    with_items: "{{ sd_access_authorized_keys }}"
+    changed_when: false
+    become: false
+    tags: server-access
+
+  - name: update SSH Keys
+    authorized_key:
+      user: "{{ sd_access_user }}"
+      key: "{{ lookup('pipe','cat /tmp/{{uuid.stdout}}') }}"
+      state: present
+      exclusive: yes
+    tags: server-access
+
+  - name: cleanup authorized_keys tmp file
+    local_action: "file path=/tmp/{{uuid.stdout}} state=absent"
+    changed_when: false
+    become: false
+    tags: server-access
+
+  - name: Disallow password authentication
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+      state: present
+    notify: Restart ssh
+    when: server_access_hardening
+
+  - name: Disallow root SSH access
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+      state: present
+    notify: Restart ssh
+    when: server_access_hardening
