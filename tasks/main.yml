@@ -50,7 +50,6 @@
       line: "PasswordAuthentication no"
       create: yes
       state: present
-    notify: Restart ssh
     when: server_access_hardening
 
   - name: Disallow root SSH access
@@ -60,5 +59,4 @@
       line: "PermitRootLogin no"
       create: yes
       state: present
-    notify: Restart ssh
     when: server_access_hardening
