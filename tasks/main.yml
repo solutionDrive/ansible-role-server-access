@@ -48,6 +48,7 @@
       dest: "/etc/ssh/sshd_config"
       regexp: "^PasswordAuthentication"
       line: "PasswordAuthentication no"
+      create: yes
       state: present
     notify: Restart ssh
     when: server_access_hardening
@@ -57,6 +58,7 @@
       dest: "/etc/ssh/sshd_config"
       regexp: "^PermitRootLogin"
       line: "PermitRootLogin no"
+      create: yes
       state: present
     notify: Restart ssh
     when: server_access_hardening
