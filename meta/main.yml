@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: server_access
   author: solutionDrive GmbH
   description: This role manages authorized keys for a specified user on the specified hosts
   company: solutionDrive GmbH
