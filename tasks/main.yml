@@ -9,6 +9,10 @@
     when: sd_access_authorized_keys|length == 0
     tags: server-access
 
+  - name: ensure user specified as sd_access_user exists
+    user:
+      name: "{{ sd_access_user }}"
+
   - name: assign temporary storage variable
     local_action: "shell echo {{ 9999999999999999999999 | random | to_uuid }}"
     register: uuid
